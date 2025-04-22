@@ -21,22 +21,20 @@ Tarea *crearTarea();
 
 void insertarNodo(Nodo ** start, Nodo * nodoNuevo);
 void mostrarLista(Nodo *start);
+void mostrarNodo(Nodo * nodo);
 
 Nodo * quitarNodo(Nodo ** start, int ID);
 void eliminarNodo(Nodo * nodoEliminado);
 
 Nodo * buscarNodoPorID(Nodo *start, int ID);
 Nodo * buscarNodoPorPalabra(Nodo *start, char *palabraClave);
+void menu(Nodo * pendientes, Nodo * realizadas);
 
 int main(){
-    Nodo *startPendientes, *startRealizadas, *nodoAux;
-    nodoAux = (Nodo * ) malloc(sizeof(Nodo));
-    Tarea *unaTarea;
+    Nodo *startPendientes, *startRealizadas;
     startPendientes = crearListaVacia(); 
     startRealizadas = crearListaVacia();
-    unaTarea = crearTarea();
-    nodoAux = crearNodo(*unaTarea);
-    insertarNodo(&startPendientes,nodoAux);
+    Menu(startPendientes,startRealizadas);
     
     return 0;
 }
@@ -59,7 +57,7 @@ void insertarNodo(Nodo ** start, Nodo * nodoNuevo){
     *start = nodoNuevo;
 }
 
-Tarea *crearTarea(){
+Tarea * crearTarea(){
     Tarea * nueva = (Tarea *) malloc (sizeof(Tarea)); 
     char buff[100];
     int duracion;
@@ -80,12 +78,17 @@ Tarea *crearTarea(){
 void mostrarLista(Nodo *start){
     Nodo * aux = start;
     while(aux != NULL){
-        printf("\n-----------------------\n");
-        printf("Identifidacor de tarea :%d -- Duracion de tarea: %d ", aux->tarea.TareaID, aux->tarea.Duracion);
-        printf("\nDescripcion: %s", aux->tarea.Descripcion);
-        printf("\n-----------------------\n");
+        mostrarNodo(aux);
+        aux = aux->siguiente;
     }
 }
+void mostrarNodo(Nodo * nodo){
+    printf("\n-----------------------\n");
+    printf("Identifidacor de tarea :%d -- Duracion de tarea: %d ", nodo->tarea.TareaID, nodo->tarea.Duracion);
+    printf("\nDescripcion: %s", nodo->tarea.Descripcion);
+    printf("\n-----------------------\n");
+}
+
 Nodo * quitarNodo(Nodo ** start, int ID){
     Nodo ** aux = start;
     while(aux != NULL && (*aux)->tarea.TareaID != ID){
@@ -124,4 +127,52 @@ Nodo * buscarNodoPorPalabra(Nodo *start, char *palabraClave){
         aux = aux->siguiente;
     }
     return NULL;
+}
+void menu(Nodo * pendientes, Nodo * realizadas){
+    int eleccion = 1;
+    do{
+        printf("\nMenu de tareas\n");
+        
+        printf("Ingrese 1 para registrar una nueva tarea\n");
+        printf("Ingrese 2 para marcar una tarea como finalizada\n");
+        printf("Ingrese 3 para listar las tareas \n");
+        printf("Ingrese 4 para buscar una tarea \n");
+        printf("Ingrese 0 para salir del programa \n");
+        eleccion = validarEntero();
+        
+        switch (eleccion)
+        {
+            case 1:
+            menuCrearTareas(&pendientes);
+            char opcion[4];
+            do{
+                printf("\nDesea agregar otra tarea?\n'si' o 'no': ");
+                scanf("%3s",&opcion);
+                if(strcmp(opcion, "si") == 0){
+                    menuCrearTareas(&pendientes);
+                }
+            }while(strcmp(opcion, "no") != 0);
+            break;
+            
+            default:
+            break;
+        }
+    }while(eleccion != 0);
+}
+void menuCrearTareas(Nodo ** pendientes){
+    Tarea * unaTarea = (Tarea *) malloc (sizeof(Tarea));
+    unaTarea = crearTarea();
+    Nodo * nuevoNodo = crearNodo(*unaTarea);
+    insertarNodo(&pendientes,nuevoNodo);
+}
+int validarEntero(){
+    int numero;
+    do{
+        printf("Su opcion: ");
+        scanf("%d",&numero);
+        if(numero< 0 || numero >4){
+            printf("\n**Ingrese una opcion valida**\n");
+        }
+    }while(numero< 0 || numero >4);
+    return numero;
 }
