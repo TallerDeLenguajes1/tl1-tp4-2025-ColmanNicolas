@@ -9,7 +9,7 @@ char *Descripcion; //
 int Duracion; // entre 10 – 100
 }Tarea;
 
-typedef struct{
+typedef struct Nodo{
 Tarea tarea;
 struct Nodo *siguiente;
 }Nodo;
@@ -23,10 +23,10 @@ void insertarNodo(Nodo ** start, Nodo * nodoNuevo);
 void mostrarLista(Nodo *start);
 
 Nodo * quitarNodo(Nodo ** start, int ID);
-void eliminarNodo(Nodo nodoEliminado);
+void eliminarNodo(Nodo * nodoEliminado);
 
 Nodo * buscarNodoPorID(Nodo *start, int ID);
-Nodo * buscarNodoPorPalabra(Nodo *start, char * []);
+Nodo * buscarNodoPorPalabra(Nodo *start, char *palabraClave);
 
 int main(){
     Nodo *startPendientes, *startRealizadas, *nodoAux;
@@ -54,7 +54,7 @@ Nodo * crearNodo(Tarea unaTarea){
     nuevoNodo->siguiente = NULL;
     return nuevoNodo;
 }
-void insertarNodo(Nodo ** start,Nodo * nodoNuevo){
+void insertarNodo(Nodo ** start, Nodo * nodoNuevo){
     nodoNuevo->siguiente = *start;
     *start = nodoNuevo;
 }
@@ -92,16 +92,36 @@ Nodo * quitarNodo(Nodo ** start, int ID){
         aux = &(*aux)->siguiente;
     }
     if(*aux){
-        Nodo * temp = aux;
+        Nodo * temp = *aux;
         *aux = (*aux)->siguiente;
         temp->siguiente = NULL;
         return temp;
     }
     return NULL;
 }
-void eliminarNodo(Nodo nodoEliminado){
-    free(eliminarNodo);
+void eliminarNodo(Nodo * nodoEliminado){
+    free(nodoEliminado);
 }
 
-Nodo * buscarNodoPorID(Nodo *start, int ID);
-Nodo * buscarNodoPorPalabra(Nodo *start, char * []);
+Nodo * buscarNodoPorID(Nodo *start, int ID){
+    Nodo * aux = start;
+    while(aux != NULL){
+        if (aux->tarea.TareaID == ID)
+        {
+            return aux;
+        }
+        aux = aux->siguiente;
+    }
+    return NULL;
+}
+Nodo * buscarNodoPorPalabra(Nodo *start, char *palabraClave){
+    Nodo * aux = start;
+    while(aux != NULL){
+        if (strstr(aux->tarea.Descripcion, palabraClave))
+        {
+            return aux;
+        }
+        aux = aux->siguiente;
+    }
+    return NULL;
+}
