@@ -28,7 +28,9 @@ void eliminarNodo(Nodo * nodoEliminado);
 
 Nodo * buscarNodoPorID(Nodo *start, int ID);
 Nodo * buscarNodoPorPalabra(Nodo *start, char *palabraClave);
+
 void menu(Nodo * pendientes, Nodo * realizadas);
+void menuCrearTareas(Nodo ** pendientes);
 
 int main(){
     Nodo *startPendientes, *startRealizadas;
@@ -68,8 +70,7 @@ Tarea * crearTarea(){
     scanf("%d",&duracion);
     getchar();
     nueva->Descripcion = (char *) malloc(strlen(buff) + 1);
-    idTareas ++;
-    nueva->TareaID = idTareas;
+    nueva->TareaID = ++idTareas;
     strcpy(nueva->Descripcion,buff);
     nueva->Duracion = duracion; 
     return nueva;
@@ -144,27 +145,51 @@ void menu(Nodo * pendientes, Nodo * realizadas){
         {
             case 1:
             menuCrearTareas(&pendientes);
-            char opcion[4];
-            do{
-                printf("\nDesea agregar otra tarea?\n'si' o 'no': ");
-                scanf("%3s",&opcion);
-                if(strcmp(opcion, "si") == 0){
-                    menuCrearTareas(&pendientes);
-                }
-            }while(strcmp(opcion, "no") != 0);
             break;
-            
+            case 2:
+            printf("\nlistado de tareas pendientes\n");
+            mostrarLista(pendientes);
+            menufinalizarTarea(&pendientes,&realizadas);
+            break;
+            case 3:
+            break;
+            case 4:
+            break;
             default:
             break;
         }
     }while(eleccion != 0);
 }
 void menuCrearTareas(Nodo ** pendientes){
+
     Tarea * unaTarea = (Tarea *) malloc (sizeof(Tarea));
     unaTarea = crearTarea();
     Nodo * nuevoNodo = crearNodo(*unaTarea);
     insertarNodo(&pendientes,nuevoNodo);
+
+    char opcion[4];
+    do{
+        printf("\nDesea agregar otra tarea?\n'si' o 'no': ");
+        scanf("%3s",&opcion);
+        if(strcmp(opcion, "si") == 0){
+            menuCrearTareas(&pendientes);
+        }
+    }while(strcmp(opcion, "no") != 0);
+
 }
+void menuFinalizarTarea(Nodo ** pendientes, Nodo ** realizadas){
+    int id;
+    printf("Escriba el ID de la tarea finalizada: ");
+    scanf("%d",&id);
+    if(buscarNodoPorID(pendientes,id) != NULL){
+        Nodo * nodoFinalizado = quitarNodo(&pendientes,id);
+        insertarNodo(&realizadas,nodoFinalizado);
+        printf("Se registró la finalizacion de la tarea... \n\n");
+    }else{
+        printf("No se encontró la tarea para el id: %d ingresado", id);
+    }
+}
+
 int validarEntero(){
     int numero;
     do{
