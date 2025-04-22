@@ -31,6 +31,8 @@ Nodo * buscarNodoPorPalabra(Nodo *start, char *palabraClave);
 
 void menu(Nodo * pendientes, Nodo * realizadas);
 void menuCrearTareas(Nodo ** pendientes);
+void menuFinalizarTarea(Nodo ** pendientes, Nodo ** realizadas);
+void menuListarTareas(Nodo *pendientes,Nodo *realizadas);
 
 int main(){
     Nodo *startPendientes, *startRealizadas;
@@ -40,6 +42,7 @@ int main(){
     
     return 0;
 }
+
 
 void limpiarbuffer(){
     char c;
@@ -152,6 +155,7 @@ void menu(Nodo * pendientes, Nodo * realizadas){
             menufinalizarTarea(&pendientes,&realizadas);
             break;
             case 3:
+            menuListarTareas(pendientes,realizadas);
             break;
             case 4:
             break;
@@ -189,7 +193,30 @@ void menuFinalizarTarea(Nodo ** pendientes, Nodo ** realizadas){
         printf("No se encontró la tarea para el id: %d ingresado", id);
     }
 }
-
+void menuListarTareas(Nodo *pendientes,Nodo *realizadas){
+    int i = 0;
+    do{
+        printf("\nIngrese 1 para listar tareas pendientes");
+        printf("\nIngrese 2 para listar tareas realizadas");
+        printf("\nIngrese 0 para volver");
+        printf("\n\nSu opcion:");
+        scanf("%d",&i);
+        switch (i)
+        {
+        case 1:
+        mostrarLista(pendientes);
+            break;
+        case 2:
+        mostrarLista(realizadas);
+            break;
+        case 0:
+        break;                        
+        default:
+        printf("\ningrese una opcion valida...\n");
+            break;
+        }
+    }while(i != 0);
+}
 int validarEntero(){
     int numero;
     do{
