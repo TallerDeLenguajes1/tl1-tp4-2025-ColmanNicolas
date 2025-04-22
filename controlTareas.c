@@ -9,48 +9,24 @@ char *Descripcion; //
 int Duracion; // entre 10 – 100
 }Tarea;
 
-typedef struct Nodo {
+typedef struct{
 Tarea tarea;
 struct Nodo *siguiente;
 }Nodo;
 
-void limpiarbuffer(){
-    char c;
-    while((c=getchar()) != '\n' && c != EOF );
-}
-Nodo *crearListaVacia(){
-    return NULL;
-}
-Nodo *crearNodo(Tarea unaTarea){
-    Nodo *nuevoNodo = (Nodo *) malloc(sizeof(Nodo));
-    nuevoNodo->tarea = unaTarea;
-    nuevoNodo->siguiente = NULL;
-    return nuevoNodo;
-}
-void insertarNodo(Nodo **start,Nodo *nodoNuevo){
-    nodoNuevo->siguiente = *start;
-    *start = nodoNuevo;
-}
+void limpiarbuffer();
+Nodo * crearListaVacia();
+Nodo * crearNodo(Tarea unaTarea);
+Tarea *crearTarea();
 
-Tarea *crearTarea(){
-    Tarea * nueva = (Tarea *) malloc (sizeof(Tarea)); 
-    char buff[100];
-    int duracion;
-    printf("\nDescriba la tarea a realizar:");
-    scanf("%s",&buff);
-    limpiarbuffer();
+void insertarNodo(Nodo ** start, Nodo * nodoNuevo);
+void mostrarLista(Nodo *start);
 
-    printf("\nIngrese la duracion de la tarea:");
-    scanf("%d",&duracion);
-    getchar();
-    nueva->Descripcion = (char *) malloc(strlen(buff) + 1);
-    idTareas ++;
-    nueva->TareaID = idTareas;
-    strcpy(nueva->Descripcion,buff);
-    nueva->Duracion = duracion; 
+Nodo * quitarNodo(Nodo ** start, int ID);
+void eliminarNodo(Nodo nodoEliminado);
 
-    return nueva;
-}
+Nodo * buscarNodoPorID(Nodo *start, int ID);
+Nodo * buscarNodoPorPalabra(Nodo *start, char * []);
 
 int main(){
     Nodo *startPendientes, *startRealizadas, *nodoAux;
@@ -64,3 +40,68 @@ int main(){
     
     return 0;
 }
+
+void limpiarbuffer(){
+    char c;
+    while((c=getchar()) != '\n' && c != EOF );
+}
+Nodo * crearListaVacia(){
+    return NULL;
+}
+Nodo * crearNodo(Tarea unaTarea){
+    Nodo *nuevoNodo = (Nodo *) malloc(sizeof(Nodo));
+    nuevoNodo->tarea = unaTarea;
+    nuevoNodo->siguiente = NULL;
+    return nuevoNodo;
+}
+void insertarNodo(Nodo ** start,Nodo * nodoNuevo){
+    nodoNuevo->siguiente = *start;
+    *start = nodoNuevo;
+}
+
+Tarea *crearTarea(){
+    Tarea * nueva = (Tarea *) malloc (sizeof(Tarea)); 
+    char buff[100];
+    int duracion;
+    printf("\nDescriba la tarea a realizar:");
+    scanf("%s",&buff);
+    limpiarbuffer();
+    printf("\nIngrese la duracion de la tarea:");
+    scanf("%d",&duracion);
+    getchar();
+    nueva->Descripcion = (char *) malloc(strlen(buff) + 1);
+    idTareas ++;
+    nueva->TareaID = idTareas;
+    strcpy(nueva->Descripcion,buff);
+    nueva->Duracion = duracion; 
+    return nueva;
+}
+
+void mostrarLista(Nodo *start){
+    Nodo * aux = start;
+    while(aux != NULL){
+        printf("\n-----------------------\n");
+        printf("Identifidacor de tarea :%d -- Duracion de tarea: %d ", aux->tarea.TareaID, aux->tarea.Duracion);
+        printf("\nDescripcion: %s", aux->tarea.Descripcion);
+        printf("\n-----------------------\n");
+    }
+}
+Nodo * quitarNodo(Nodo ** start, int ID){
+    Nodo ** aux = start;
+    while(aux != NULL && (*aux)->tarea.TareaID != ID){
+        aux = &(*aux)->siguiente;
+    }
+    if(*aux){
+        Nodo * temp = aux;
+        *aux = (*aux)->siguiente;
+        temp->siguiente = NULL;
+        return temp;
+    }
+    return NULL;
+}
+void eliminarNodo(Nodo nodoEliminado){
+    free(eliminarNodo);
+}
+
+Nodo * buscarNodoPorID(Nodo *start, int ID);
+Nodo * buscarNodoPorPalabra(Nodo *start, char * []);
